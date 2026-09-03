@@ -1,26 +1,335 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-sans);
+
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+
+  --color-destructive: var(--destructive);
+
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+
+/* =========================================================
+   LIGHT THEME
+   ========================================================= */
+
+:root {
+  --background: #ffffff;
+  --foreground: #111111;
+
+  --card: #ffffff;
+  --card-foreground: #111111;
+
+  --popover: #ffffff;
+  --popover-foreground: #111111;
+
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+
+  --secondary: #333333;
+  --secondary-foreground: #ffffff;
+
+  --muted: #f5f5f5;
+  --muted-foreground: #555555;
+
+  --accent: #eeeeee;
+  --accent-foreground: #111111;
+
+  --destructive: #ef4444;
+
+  --border: #dddddd;
+  --input: #dddddd;
+
+  --ring: #000000;
+
+  --radius: 0.5rem;
+}
+
+
+/* =========================================================
+   DARK THEME
+   ========================================================= */
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+
+  --card: #171717;
+  --card-foreground: #ffffff;
+
+  --popover: #171717;
+  --popover-foreground: #ffffff;
+
+  --primary: #ffffff;
+  --primary-foreground: #000000;
+
+  --secondary: #e5e5e5;
+  --secondary-foreground: #000000;
+
+  --muted: #171717;
+  --muted-foreground: #b0b0b0;
+
+  --accent: #222222;
+  --accent-foreground: #ffffff;
+
+  --destructive: #7f1d1d;
+
+  --border: #333333;
+  --input: #333333;
+
+  --ring: #ffffff;
+}
+
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+@layer base {
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans scroll-smooth;
+  }
+
+  body {
+    @apply text-foreground min-h-screen antialiased;
+
+    background-color: var(--background);
+
+    /*
+      IMPORTANT:
+      No dark overlay here.
+      The actual image remains visible.
+    */
+    background-image: url("/background_image_2.png");
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+
+    /*
+      Keeps the image behind the content.
+    */
+    background-blend-mode: normal;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+/* =========================================================
+   GLASSMORPHISM
+   LIGHT MODE
+   ========================================================= */
+
+.glass {
+
+  background: rgba(255, 255, 255, 0.72);
+
+  border: 1px solid rgba(255, 255, 255, 0.9);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.10);
+}
+
+
+/* =========================================================
+   GLASS CARD
+   LIGHT MODE
+   ========================================================= */
+
+.glass-card {
+
+  background: rgba(255, 255, 255, 0.82) !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.12);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+
+/* =========================================================
+   GLASSMORPHISM
+   DARK MODE
+   ========================================================= */
+
+.dark .glass {
+
+  background: rgba(15, 15, 15, 0.68);
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.45);
+}
+
+
+/* =========================================================
+   GLASS CARD
+   DARK MODE
+   ========================================================= */
+
+.dark .glass-card {
+
+  background: rgba(15, 15, 15, 0.70) !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.50);
+}
+
+
+/* =========================================================
+   SHADCN CARDS
+   ========================================================= */
+
+[data-slot="card"] {
+
+  background: rgba(255, 255, 255, 0.82) !important;
+
+  border-color: rgba(255, 255, 255, 0.90) !important;
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.12);
+}
+
+
+.dark [data-slot="card"] {
+
+  background: rgba(15, 15, 15, 0.70) !important;
+
+  border-color: rgba(255, 255, 255, 0.18) !important;
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.50);
+}
+
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+/*
+  Let the website background image remain visible.
+*/
+
+section {
+  background-color: transparent !important;
+}
+
+
+/* =========================================================
+   TEXT
+   ========================================================= */
+
+/*
+  Don't force white/black text globally.
+  Tailwind's text-foreground and text-muted-foreground
+  will automatically follow light/dark mode.
+*/
+
+section h1,
+section h2,
+section h3 {
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================================
+   DARK MODE TEXT SHADOW
+   ========================================================= */
+
+.dark section h1,
+.dark section h2,
+.dark section h3 {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.50);
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.glass-card:hover {
+
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  body {
+    background-attachment: scroll;
+    background-position: center;
+  }
+
 }

@@ -1,103 +1,617 @@
-import Image from "next/image";
+"use client"
+
+import { motion } from "framer-motion"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import {
+  ArrowRight,
+  Bot,
+  Code,
+  Cpu,
+  Lightbulb,
+  Users,
+  Trophy,
+} from "lucide-react"
+import Link from "next/link"
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="relative min-h-screen overflow-hidden">
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      {/* =====================================================
+          WHOLE WEBSITE BACKGROUND
+      ===================================================== */}
+
+      <div
+        className="fixed inset-0 -z-20 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/background_image.png')",
+        }}
+      />
+
+      {/* Dark overlay */}
+      <div className="fixed inset-0 -z-10 bg-black/45" />
+
+      {/* =====================================================
+          MAIN CONTENT
+      ===================================================== */}
+
+      <div className="relative z-10 flex flex-col min-h-screen">
+
+        {/* ===================================================
+            HERO SECTION
+        =================================================== */}
+
+        <section className="min-h-[720px] flex items-center justify-center px-4 py-20">
+
+          <div className="container mx-auto max-w-5xl">
+
+            {/* Glassmorphism Hero Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 40, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                duration: 0.8,
+                ease: "easeOut",
+              }}
+              className="
+                mx-auto
+                max-w-4xl
+                rounded-3xl
+                border border-white/30
+                bg-white/15
+                backdrop-blur-xl
+                shadow-2xl
+                px-6
+                py-12
+                sm:px-10
+                md:px-16
+                md:py-16
+                text-center
+              "
+            >
+
+              {/* Logo */}
+              {/* Ennovate Logo - No Square Background */}
+{/* Ennovate Logo */}
+<motion.div
+  initial={{ opacity: 0, scale: 0.9 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 0.5, delay: 0.2 }}
+  className="flex justify-center mb-2"
+>
+  <img
+    src="/ennovate.png"
+    alt="Ennovate Club"
+    className="
+      w-[180px]
+      sm:w-[210px]
+      md:w-[250px]
+      h-auto
+      object-contain
+      drop-shadow-lg
+      dark:invert
+    "
+  />
+</motion.div>
+
+{/* Heading */}
+<motion.h1
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{
+    duration: 0.6,
+    delay: 0.3,
+  }}
+  className="
+    text-4xl
+    sm:text-5xl
+    md:text-7xl
+    font-extrabold
+    tracking-tight
+    text-white
+    mb-3
+    drop-shadow-2xl
+  "
+>
+  Ennovate Club
+</motion.h1>
+
+              {/* Tagline */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.4,
+                }}
+                className="
+                  text-lg
+                  md:text-2xl
+                  font-medium
+                  text-white
+                  mb-6
+                  drop-shadow-lg
+                "
+              >
+                Innovate • Build • Collaborate • Inspire
+              </motion.p>
+
+              {/* Description */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.5,
+                }}
+                className="
+                  max-w-3xl
+                  mx-auto
+                  text-sm
+                  md:text-base
+                  leading-7
+                  text-white/90
+                  mb-10
+                  drop-shadow-md
+                "
+              >
+                Ennovate Club is a student-driven innovation community where
+                creativity meets technology. We encourage students to explore
+                new tech, build real-world solutions, and compete in
+                national-level hackathons.
+              </motion.p>
+
+              {/* Buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.6,
+                }}
+                className="
+                  flex
+                  flex-col
+                  sm:flex-row
+                  justify-center
+                  items-center
+                  gap-4
+                "
+              >
+
+                {/* Join Club */}
+                <Link href="/join">
+                  <Button
+                    size="lg"
+                    className="
+                      w-full
+                      sm:w-auto
+                      h-14
+                      px-8
+                      rounded-xl
+                      bg-white
+                      text-black
+                      hover:bg-white/90
+                      shadow-xl
+                      font-semibold
+                    "
+                  >
+                    Join the Club
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+
+                {/* Explore Departments */}
+                <Link href="/departments">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="
+                      w-full
+                      sm:w-auto
+                      h-14
+                      px-8
+                      rounded-xl
+                      border-white/50
+                      bg-white/10
+                      text-white
+                      hover:bg-white/20
+                      backdrop-blur-md
+                    "
+                  >
+                    Explore Departments
+                  </Button>
+                </Link>
+
+              </motion.div>
+
+            </motion.div>
+
+          </div>
+
+        </section>
+
+
+        {/* ===================================================
+            STATS SECTION
+        =================================================== */}
+
+        <section className="py-20 px-4">
+
+          <div className="container mx-auto max-w-6xl">
+
+            <div className="
+              grid
+              grid-cols-2
+              md:grid-cols-4
+              gap-5
+            ">
+
+              {[
+                {
+                  label: "Active Members",
+                  value: "200+",
+                  icon: Users,
+                },
+                {
+                  label: "Projects Completed",
+                  value: "50+",
+                  icon: Code,
+                },
+                {
+                  label: "Hackathons Won",
+                  value: "15",
+                  icon: Trophy,
+                },
+                {
+                  label: "Workshops Hosted",
+                  value: "30+",
+                  icon: Lightbulb,
+                },
+              ].map((stat, i) => (
+
+                <motion.div
+                  key={stat.label}
+                  initial={{
+                    opacity: 0,
+                    y: 30,
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  viewport={{
+                    once: true,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    delay: i * 0.1,
+                  }}
+                  className="
+                    rounded-2xl
+                    border border-white/25
+                    bg-white/15
+                    backdrop-blur-xl
+                    shadow-xl
+                    p-6
+                    text-center
+                    hover:bg-white/20
+                    transition-all
+                    duration-300
+                  "
+                >
+
+                  <div className="
+                    mx-auto
+                    mb-4
+                    w-12
+                    h-12
+                    rounded-full
+                    flex
+                    items-center
+                    justify-center
+                    bg-white/20
+                    border border-white/20
+                  ">
+                    <stat.icon
+                      className="w-6 h-6 text-white"
+                    />
+                  </div>
+
+                  <h3 className="
+                    text-3xl
+                    md:text-4xl
+                    font-bold
+                    text-white
+                    mb-2
+                  ">
+                    {stat.value}
+                  </h3>
+
+                  <p className="
+                    text-xs
+                    md:text-sm
+                    font-medium
+                    text-white/75
+                    uppercase
+                    tracking-wider
+                  ">
+                    {stat.label}
+                  </p>
+
+                </motion.div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        {/* ===================================================
+            LATEST UPDATES
+        =================================================== */}
+
+        <section className="py-24 px-4">
+
+          <div className="container mx-auto max-w-6xl">
+
+            {/* Heading */}
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+              }}
+              className="text-center mb-14"
+            >
+
+              <h2 className="
+                text-4xl
+                md:text-5xl
+                font-bold
+                text-white
+                mb-4
+                drop-shadow-xl
+              ">
+                Latest Updates
+              </h2>
+
+              <p className="
+                max-w-2xl
+                mx-auto
+                text-white/80
+                text-sm
+                md:text-base
+              ">
+                Stay up to date with what&apos;s happening at Ennovate Club.
+              </p>
+
+            </motion.div>
+
+
+            {/* Update Cards */}
+            <div className="
+              grid
+              md:grid-cols-3
+              gap-7
+              max-w-6xl
+              mx-auto
+            ">
+
+              {/* Robotics */}
+              <Card className="
+                border-white/25
+                bg-white/15
+                backdrop-blur-xl
+                shadow-2xl
+                rounded-2xl
+                hover:bg-white/20
+                hover:-translate-y-2
+                transition-all
+                duration-300
+              ">
+
+                <CardContent className="p-8">
+
+                  <div className="
+                    w-12
+                    h-12
+                    bg-white/20
+                    border border-white/20
+                    rounded-xl
+                    flex
+                    items-center
+                    justify-center
+                    mb-6
+                  ">
+                    <Bot className="w-6 h-6 text-white" />
+                  </div>
+
+                  <h3 className="
+                    text-xl
+                    font-bold
+                    text-white
+                    mb-3
+                  ">
+                    Robotics Workshop 2026
+                  </h3>
+
+                  <p className="
+                    text-white/75
+                    mb-5
+                    leading-6
+                  ">
+                    Join our upcoming hands-on session on building
+                    autonomous robots from scratch.
+                  </p>
+
+                  <Link
+                    href="/events"
+                    className="
+                      text-white
+                      font-semibold
+                      flex
+                      items-center
+                      hover:underline
+                    "
+                  >
+                    Read more
+                    <ArrowRight className="ml-1 w-4 h-4" />
+                  </Link>
+
+                </CardContent>
+
+              </Card>
+
+
+              {/* Hackathon */}
+              <Card className="
+                border-white/25
+                bg-white/15
+                backdrop-blur-xl
+                shadow-2xl
+                rounded-2xl
+                hover:bg-white/20
+                hover:-translate-y-2
+                transition-all
+                duration-300
+              ">
+
+                <CardContent className="p-8">
+
+                  <div className="
+                    w-12
+                    h-12
+                    bg-white/20
+                    border border-white/20
+                    rounded-xl
+                    flex
+                    items-center
+                    justify-center
+                    mb-6
+                  ">
+                    <Trophy className="w-6 h-6 text-white" />
+                  </div>
+
+                  <h3 className="
+                    text-xl
+                    font-bold
+                    text-white
+                    mb-3
+                  ">
+                    Hackathon Winners
+                  </h3>
+
+                  <p className="
+                    text-white/75
+                    mb-5
+                    leading-6
+                  ">
+                    Congratulations to Team Innovators for winning
+                    the Smart India Hackathon.
+                  </p>
+
+                  <Link
+                    href="/achievements"
+                    className="
+                      text-white
+                      font-semibold
+                      flex
+                      items-center
+                      hover:underline
+                    "
+                  >
+                    Read more
+                    <ArrowRight className="ml-1 w-4 h-4" />
+                  </Link>
+
+                </CardContent>
+
+              </Card>
+
+
+              {/* IoT */}
+              <Card className="
+                border-white/25
+                bg-white/15
+                backdrop-blur-xl
+                shadow-2xl
+                rounded-2xl
+                hover:bg-white/20
+                hover:-translate-y-2
+                transition-all
+                duration-300
+              ">
+
+                <CardContent className="p-8">
+
+                  <div className="
+                    w-12
+                    h-12
+                    bg-white/20
+                    border border-white/20
+                    rounded-xl
+                    flex
+                    items-center
+                    justify-center
+                    mb-6
+                  ">
+                    <Cpu className="w-6 h-6 text-white" />
+                  </div>
+
+                  <h3 className="
+                    text-xl
+                    font-bold
+                    text-white
+                    mb-3
+                  ">
+                    New IoT Lab
+                  </h3>
+
+                  <p className="
+                    text-white/75
+                    mb-5
+                    leading-6
+                  ">
+                    We&apos;ve just upgraded our hardware lab with new
+                    Raspberry Pi and ESP32 kits.
+                  </p>
+
+                  <Link
+                    href="/departments"
+                    className="
+                      text-white
+                      font-semibold
+                      flex
+                      items-center
+                      hover:underline
+                    "
+                  >
+                    Read more
+                    <ArrowRight className="ml-1 w-4 h-4" />
+                  </Link>
+
+                </CardContent>
+
+              </Card>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
     </div>
-  );
+  )
 }
