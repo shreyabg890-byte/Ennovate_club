@@ -1,190 +1,495 @@
 "use client"
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { CheckCircle2, Loader2 } from "lucide-react"
 
-export default function JoinClubPage() {
+import { FormEvent, useState } from "react"
+import Link from "next/link"
+import { ArrowLeft, CheckCircle2, Send } from "lucide-react"
+import { supabase } from "@/lib/supabase"
+
+export default function JoinPage() {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    usn: "",
+    branch: "",
+    year: "",
+    phone: "",
+    email: "",
+    skills: "",
+    interestArea: "",
+    department: "",
+    reason: "",
+  })
+
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState("")
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+
+    setError("")
+    setSuccess(false)
+
+    // Basic validation
+    if (
+      !formData.fullName ||
+      !formData.usn ||
+      !formData.branch ||
+      !formData.year ||
+      !formData.phone ||
+      !formData.email ||
+      !formData.skills ||
+      !formData.interestArea ||
+      !formData.department ||
+      !formData.reason
+    ) {
+      setError("Please fill in all the required fields.")
+      return
+    }
+
     setIsSubmitting(true)
-    
-    // Simulate API call
-    setTimeout(() => {
+
+    try {
+      console.log("Submitting application...")
+
+      const { error: insertError } = await supabase
+        .from("club_members")
+        .insert({
+          full_name: formData.fullName,
+          usn: formData.usn,
+          branch: formData.branch,
+          year: formData.year,
+          phone: formData.phone,
+          email: formData.email,
+          skills: formData.skills,
+          interest_area: formData.interestArea,
+          department: formData.department,
+          reason: formData.reason,
+        })
+
+      if (insertError) {
+        console.error("SUPABASE INSERT ERROR")
+        console.error("Message:", insertError.message)
+        console.error("Code:", insertError.code)
+        console.error("Details:", insertError.details)
+        console.error("Hint:", insertError.hint)
+
+        setError(
+          `Database error: ${insertError.message}`
+        )
+
+        return
+      }
+
+      console.log("Application submitted successfully!")
+
+      setSuccess(true)
+
+      // Clear form
+      setFormData({
+        fullName: "",
+        usn: "",
+        branch: "",
+        year: "",
+        phone: "",
+        email: "",
+        skills: "",
+        interestArea: "",
+        department: "",
+        reason: "",
+      })
+
+    } catch (err) {
+      console.error("FULL ERROR:", err)
+
+      if (err instanceof Error) {
+        setError(`Connection error: ${err.message}`)
+      } else {
+        setError(
+          `Connection error: ${String(err)}`
+        )
+      }
+    } finally {
       setIsSubmitting(false)
-      setIsSubmitted(true)
-      
-      // Auto-hide success message after 5 seconds
-      setTimeout(() => {
-        setIsSubmitted(false)
-      }, 5000)
-    }, 1500)
+    }
   }
 
   return (
-    <div className="pt-24 pb-16 min-h-screen relative">
-      {/* Toast Notification */}
-      {isSubmitted && (
-        <motion.div 
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -50 }}
-          className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-foreground text-background px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 border border-border"
-        >
-          <CheckCircle2 className="w-6 h-6" />
-          <p className="font-medium">Thank you for applying! Our team will contact you soon.</p>
-        </motion.div>
-      )}
+    <main className="min-h-screen px-6 py-28">
+      <div className="mx-auto max-w-4xl">
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
-        <div className="text-center mb-12">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-bold mb-4 text-foreground"
-          >
-            Join Ennovator Club
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-lg text-muted-foreground"
-          >
-            Take the first step towards building your future. Fill out the application form below.
-          </motion.p>
+        {/* Back button */}
+        <Link
+          href="/"
+          className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Home
+        </Link>
+
+        {/* Heading */}
+        <div className="mb-10">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-muted-foreground">
+            ENNOVATE CLUB
+          </p>
+
+          <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
+            Join the Club
+          </h1>
+
+          <p className="mt-4 max-w-2xl text-muted-foreground">
+            Be part of a community where ideas become innovations.
+            Fill in the application form below to join Ennovate Club.
+          </p>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Card className="glass-card border-none">
-            <CardHeader className="bg-muted/50 border-b border-border pb-8">
-              <CardTitle className="text-2xl text-foreground">Application Form</CardTitle>
-              <CardDescription className="text-muted-foreground">
-                Please provide accurate information. All fields are mandatory unless marked otherwise.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-6 sm:p-10">
-              <form onSubmit={handleSubmit} className="space-y-8">
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName">Full Name</Label>
-                    <Input id="fullName" required placeholder="John Doe" className="bg-background focus-visible:ring-foreground" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="usn">USN / Roll Number</Label>
-                    <Input id="usn" required placeholder="1XX22XX000" className="bg-background focus-visible:ring-foreground" />
-                  </div>
-                </div>
+        {/* Form Card */}
+        <div className="rounded-2xl border border-border bg-background/80 p-6 shadow-xl backdrop-blur-md md:p-10">
 
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="branch">Branch</Label>
-                    <Input id="branch" required placeholder="Computer Science" className="bg-background focus-visible:ring-foreground" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="year">Year of Study</Label>
-                    <Select required>
-                      <SelectTrigger className="bg-background focus-visible:ring-foreground">
-                        <SelectValue placeholder="Select Year" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1">1st Year</SelectItem>
-                        <SelectItem value="2">2nd Year</SelectItem>
-                        <SelectItem value="3">3rd Year</SelectItem>
-                        <SelectItem value="4">4th Year</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+          {/* Success Message */}
+          {success && (
+            <div className="mb-8 flex items-start gap-4 rounded-xl border border-green-500/30 bg-green-500/10 p-5">
+              <CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0 text-green-600" />
 
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" type="tel" required placeholder="+91 9876543210" className="bg-background focus-visible:ring-foreground" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" type="email" required placeholder="john@example.com" className="bg-background focus-visible:ring-foreground" />
-                  </div>
-                </div>
+              <div>
+                <h3 className="font-semibold text-green-700 dark:text-green-400">
+                  Application Submitted Successfully!
+                </h3>
 
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Thank you for applying to Ennovate Club.
+                  Your application has been received.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Error Message */}
+          {error && (
+            <div className="mb-8 rounded-xl border border-red-500/30 bg-red-500/10 p-5">
+              <p className="font-semibold text-red-600">
+                Something went wrong
+              </p>
+
+              <p className="mt-2 break-words text-sm text-red-600/90">
+                {error}
+              </p>
+            </div>
+          )}
+
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-8"
+          >
+
+            {/* Personal Information */}
+            <section>
+              <h2 className="mb-5 text-xl font-semibold">
+                Personal Information
+              </h2>
+
+              <div className="grid gap-5 md:grid-cols-2">
+
+                {/* Full Name */}
                 <div className="space-y-2">
-                  <Label htmlFor="skills">Technical & Non-Technical Skills</Label>
-                  <Input id="skills" required placeholder="e.g., Python, React, Video Editing, Public Speaking" className="bg-background focus-visible:ring-foreground" />
-                </div>
+                  <label
+                    htmlFor="fullName"
+                    className="text-sm font-medium"
+                  >
+                    Full Name *
+                  </label>
 
-                <div className="space-y-2">
-                  <Label htmlFor="interestArea">Core Area of Interest</Label>
-                  <Input id="interestArea" required placeholder="e.g., Artificial Intelligence, Web Dev, Robotics" className="bg-background focus-visible:ring-foreground" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="department">Department Interested In</Label>
-                  <Select required>
-                    <SelectTrigger className="bg-background focus-visible:ring-foreground">
-                      <SelectValue placeholder="Select a Department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="bot">Building Bot</SelectItem>
-                      <SelectItem value="ideathon">Ideathon & Hackathon</SelectItem>
-                      <SelectItem value="software">Hardware & Software</SelectItem>
-                      <SelectItem value="problems">Problem Statements</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="reason">Why do you want to join Ennovator Club?</Label>
-                  <Textarea 
-                    id="reason" 
-                    required 
-                    placeholder="Tell us about your passion, what you want to learn, and how you can contribute..." 
-                    className="min-h-[120px] bg-background focus-visible:ring-foreground"
+                  <input
+                    id="fullName"
+                    name="fullName"
+                    type="text"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    placeholder="Enter your full name"
+                    className="w-full rounded-lg border border-border bg-background px-4 py-3 outline-none transition focus:border-foreground"
                   />
                 </div>
 
-                <Button 
-                  type="submit" 
-                  disabled={isSubmitting || isSubmitted} 
-                  className="w-full h-12 text-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all rounded-xl shadow-md"
+                {/* USN */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="usn"
+                    className="text-sm font-medium"
+                  >
+                    USN / Roll Number *
+                  </label>
+
+                  <input
+                    id="usn"
+                    name="usn"
+                    type="text"
+                    value={formData.usn}
+                    onChange={handleChange}
+                    placeholder="Enter your USN"
+                    className="w-full rounded-lg border border-border bg-background px-4 py-3 uppercase outline-none transition focus:border-foreground"
+                  />
+                </div>
+
+                {/* Branch */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="branch"
+                    className="text-sm font-medium"
+                  >
+                    Branch *
+                  </label>
+
+                  <input
+                    id="branch"
+                    name="branch"
+                    type="text"
+                    value={formData.branch}
+                    onChange={handleChange}
+                    placeholder="e.g. CSE"
+                    className="w-full rounded-lg border border-border bg-background px-4 py-3 outline-none transition focus:border-foreground"
+                  />
+                </div>
+
+                {/* Year */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="year"
+                    className="text-sm font-medium"
+                  >
+                    Year of Study *
+                  </label>
+
+                  <select
+                    id="year"
+                    name="year"
+                    value={formData.year}
+                    onChange={handleChange}
+                    className="w-full rounded-lg border border-border bg-background px-4 py-3 outline-none transition focus:border-foreground"
+                  >
+                    <option value="">
+                      Select your year
+                    </option>
+
+                    <option value="1st Year">
+                      1st Year
+                    </option>
+
+                    <option value="2nd Year">
+                      2nd Year
+                    </option>
+
+                    <option value="3rd Year">
+                      3rd Year
+                    </option>
+
+                    <option value="4th Year">
+                      4th Year
+                    </option>
+                  </select>
+                </div>
+
+                {/* Phone */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="phone"
+                    className="text-sm font-medium"
+                  >
+                    Phone Number *
+                  </label>
+
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="Enter your phone number"
+                    className="w-full rounded-lg border border-border bg-background px-4 py-3 outline-none transition focus:border-foreground"
+                  />
+                </div>
+
+                {/* Email */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="email"
+                    className="text-sm font-medium"
+                  >
+                    Email Address *
+                  </label>
+
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                    className="w-full rounded-lg border border-border bg-background px-4 py-3 outline-none transition focus:border-foreground"
+                  />
+                </div>
+
+              </div>
+            </section>
+
+            {/* Skills & Interests */}
+            <section>
+              <h2 className="mb-5 text-xl font-semibold">
+                Skills & Interests
+              </h2>
+
+              <div className="space-y-5">
+
+                {/* Skills */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="skills"
+                    className="text-sm font-medium"
+                  >
+                    Technical & Non-Technical Skills *
+                  </label>
+
+                  <textarea
+                    id="skills"
+                    name="skills"
+                    value={formData.skills}
+                    onChange={handleChange}
+                    rows={4}
+                    placeholder="Example: Python, Java, Web Development, Communication, Leadership..."
+                    className="w-full resize-none rounded-lg border border-border bg-background px-4 py-3 outline-none transition focus:border-foreground"
+                  />
+                </div>
+
+                {/* Interest Area */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="interestArea"
+                    className="text-sm font-medium"
+                  >
+                    Core Area of Interest *
+                  </label>
+
+                  <input
+                    id="interestArea"
+                    name="interestArea"
+                    type="text"
+                    value={formData.interestArea}
+                    onChange={handleChange}
+                    placeholder="Example: AI, Web Development, Robotics, IoT..."
+                    className="w-full rounded-lg border border-border bg-background px-4 py-3 outline-none transition focus:border-foreground"
+                  />
+                </div>
+
+              </div>
+            </section>
+
+            {/* Department */}
+            <section>
+              <h2 className="mb-5 text-xl font-semibold">
+                Club Department
+              </h2>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="department"
+                  className="text-sm font-medium"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Submitting Application...
-                    </>
-                  ) : isSubmitted ? (
-                    <>
-                      <CheckCircle2 className="mr-2 h-5 w-5" />
-                      Application Submitted Successfully
-                    </>
-                  ) : (
-                    "Submit Application"
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </motion.div>
+                  Department Interested In *
+                </label>
+
+                <select
+                  id="department"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-border bg-background px-4 py-3 outline-none transition focus:border-foreground"
+                >
+                  <option value="">
+                    Select a department
+                  </option>
+
+                  <option value="Building Bot">
+                    Building Bot
+                  </option>
+
+                  <option value="Ideathon & Hackathon">
+                    Ideathon & Hackathon
+                  </option>
+
+                  <option value="Hardware & Software">
+                    Hardware & Software
+                  </option>
+
+                  <option value="Problem Statements">
+                    Problem Statements
+                  </option>
+                </select>
+              </div>
+            </section>
+
+            {/* Reason */}
+            <section>
+              <h2 className="mb-5 text-xl font-semibold">
+                About You
+              </h2>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="reason"
+                  className="text-sm font-medium"
+                >
+                  Why do you want to join Ennovate Club? *
+                </label>
+
+                <textarea
+                  id="reason"
+                  name="reason"
+                  value={formData.reason}
+                  onChange={handleChange}
+                  rows={6}
+                  placeholder="Tell us why you want to join the club..."
+                  className="w-full resize-none rounded-lg border border-border bg-background px-4 py-3 outline-none transition focus:border-foreground"
+                />
+              </div>
+            </section>
+
+            {/* Submit */}
+            <div className="border-t border-border pt-8">
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-foreground px-6 py-3.5 font-semibold text-background transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 md:w-auto"
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4" />
+                    Submit Application
+                  </>
+                )}
+              </button>
+
+            </div>
+
+          </form>
+        </div>
       </div>
-    </div>
+    </main>
   )
 }
