@@ -1,97 +1,177 @@
 "use client"
+
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
-import { Users, CheckCircle2, Clock } from "lucide-react"
+import { Users, CheckCircle2, Clock, Cpu } from "lucide-react"
 
 export default function ProjectsPage() {
   const projects = [
     {
-      title: "Smart Attendance System",
-      image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&q=80&w=800",
+      title: "Humanoid BOT – Multi-Tasking Robot",
       department: "Hardware & Software",
-      tech: ["Python", "OpenCV", "React"],
+      tech: ["Arduino", "Servo Motors", "Embedded Systems"],
       teamSize: 4,
-      status: "completed"
+      status: "ongoing",
     },
+
     {
-      title: "Autonomous Delivery Robot",
-      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=800",
-      department: "Building Bot",
-      tech: ["ROS", "C++", "Arduino"],
-      teamSize: 5,
-      status: "ongoing"
-    },
-    {
-      title: "Medicine Reminder Device",
-      image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=800",
-      department: "Building Bot",
-      tech: ["IoT", "ESP32", "Firebase"],
-      teamSize: 3,
-      status: "completed"
-    },
-    {
-      title: "Smart Water Purifier",
-      image: "https://images.unsplash.com/photo-1544460773-8822002f2324?auto=format&fit=crop&q=80&w=800",
+      title: "Robo Soccer",
       department: "Hardware & Software",
-      tech: ["Sensors", "IoT", "Mobile App"],
+      tech: ["Arduino", "RF Communication", "Robotics"],
       teamSize: 4,
-      status: "ongoing"
+      status: "completed",
     },
+
     {
-      title: "College Event Management System",
-      image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800",
-      department: "Ideathon & Hackathon",
-      tech: ["Next.js", "Node.js", "MongoDB"],
-      teamSize: 6,
-      status: "completed"
-    }
+      title: "Obstacle Avoidance BOT",
+      department: "Hardware & Software",
+      tech: ["Arduino Uno", "Ultrasonic Sensor", "Motor Driver"],
+      teamSize: 4,
+      status: "completed",
+    },
+
+    {
+      title: "Drone for Medical Kit Supply in Emergency",
+      department: "Hardware & Software",
+      tech: ["Arduino Uno", "Ultrasonic Sensor", "Motor Driver"],
+      teamSize: 4,
+      status: "completed",
+    },
   ]
 
-  const ongoingProjects = projects.filter(p => p.status === "ongoing")
-  const completedProjects = projects.filter(p => p.status === "completed")
+  const ongoingProjects = projects.filter(
+    (project) => project.status === "ongoing"
+  )
 
-  const ProjectCard = ({ project, index }: { project: { title: string, image: string, department: string, tech: string[], teamSize: number, status: string }, index: number }) => (
+  const completedProjects = projects.filter(
+    (project) => project.status === "completed"
+  )
+
+  const ProjectCard = ({
+    project,
+    index,
+  }: {
+    project: {
+      title: string
+      department: string
+      tech: string[]
+      teamSize: number
+      status: string
+    }
+    index: number
+  }) => (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1 }}
+      className="h-full"
     >
-      <Card className="glass-card overflow-hidden h-full flex flex-col group hover:-translate-y-1 transition-all duration-300">
-        <div className="relative h-48 sm:h-56 overflow-hidden">
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
-          <img 
-            src={project.image} 
-            alt={project.title} 
-            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out grayscale group-hover:grayscale-0"
-          />
-          <div className="absolute top-4 right-4 z-20">
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md flex items-center gap-1 ${
-              project.status === 'completed' 
-                ? 'bg-foreground text-background border border-foreground/30' 
-                : 'bg-background/80 text-foreground border border-border'
-            }`}>
-              {project.status === 'completed' ? <CheckCircle2 className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
-              {project.status === 'completed' ? 'Completed' : 'Ongoing'}
-            </span>
+      <Card className="glass-card overflow-hidden h-full flex flex-col group">
+
+        {/* Project Header */}
+        <div className="h-20 bg-white/5 border-b border-white/10 flex items-center justify-between px-6">
+
+          {/* Project Icon */}
+          <div className="
+            w-10
+            h-10
+            rounded-xl
+            bg-white/10
+            border
+            border-white/20
+            flex
+            items-center
+            justify-center
+          ">
+            <Cpu className="w-5 h-5 text-white" />
           </div>
+
+          {/* Status */}
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md flex items-center gap-1.5 border ${
+              project.status === "completed"
+                ? "bg-white text-black border-white"
+                : "bg-black/60 text-white border-white/30"
+            }`}
+          >
+            {project.status === "completed" ? (
+              <CheckCircle2 className="w-3.5 h-3.5 text-black" />
+            ) : (
+              <Clock className="w-3.5 h-3.5 text-white" />
+            )}
+
+            {project.status === "completed"
+              ? "Completed"
+              : "Ongoing"}
+          </span>
         </div>
+
+        {/* Project Content */}
         <CardContent className="p-6 flex-grow flex flex-col">
-          <div className="text-sm font-semibold text-muted-foreground mb-2">{project.department}</div>
-          <h3 className="text-xl font-bold mb-4 line-clamp-2 text-foreground">{project.title}</h3>
-          
+
+          {/* Department */}
+          <div className="
+            text-xs
+            font-semibold
+            text-white/70
+            uppercase
+            tracking-wider
+            mb-2
+          ">
+            {project.department}
+          </div>
+
+          {/* Title */}
+          <h3 className="
+            text-xl
+            font-bold
+            mb-5
+            text-white
+            line-clamp-2
+          ">
+            {project.title}
+          </h3>
+
+          {/* Technologies */}
           <div className="flex flex-wrap gap-2 mb-6 mt-auto">
-            {project.tech.map((t: string) => (
-              <span key={t} className="px-2.5 py-1 rounded-md text-xs font-medium bg-muted text-foreground border border-border">
-                {t}
+            {project.tech.map((technology) => (
+              <span
+                key={technology}
+                className="
+                  px-2.5
+                  py-1
+                  rounded-md
+                  text-xs
+                  font-medium
+                  bg-white/10
+                  text-white
+                  border
+                  border-white/20
+                "
+              >
+                {technology}
               </span>
             ))}
           </div>
 
-          <div className="flex items-center text-sm text-muted-foreground pt-4 border-t border-border">
-            <Users className="w-4 h-4 mr-2" />
-            <span>Team Size: {project.teamSize} members</span>
+          {/* Team Size */}
+          <div className="
+            flex
+            items-center
+            text-sm
+            text-white/80
+            pt-4
+            border-t
+            border-white/15
+          ">
+            <Users className="w-4 h-4 mr-2 text-white/70" />
+
+            <span>
+              Team Size: {project.teamSize} members
+            </span>
           </div>
+
         </CardContent>
       </Card>
     </motion.div>
@@ -99,51 +179,132 @@ export default function ProjectsPage() {
 
   return (
     <div className="pt-24 pb-16 min-h-screen">
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Page Heading */}
         <div className="text-center mb-16">
-          <motion.h1 
+
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-bold mb-4 text-foreground"
+            className="
+              text-4xl
+              md:text-6xl
+              font-extrabold
+              mb-4
+              text-white
+              drop-shadow-lg
+            "
           >
             Our Projects
           </motion.h1>
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-lg text-muted-foreground max-w-2xl mx-auto"
+            className="
+              text-lg
+              md:text-xl
+              text-white/85
+              max-w-2xl
+              mx-auto
+            "
           >
-            Discover the innovative solutions built by our club members to solve real-world challenges.
+            Discover the innovative solutions built by our club
+            members to solve real-world challenges.
           </motion.p>
+
         </div>
 
-        <div className="space-y-24">
+        {/* Projects */}
+        <div className="space-y-20">
+
+          {/* Ongoing Projects */}
           <section>
+
             <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-3xl font-bold text-foreground">Ongoing Projects</h2>
-              <div className="h-px bg-border flex-grow mt-2" />
+
+              <h2 className="
+                text-2xl
+                md:text-3xl
+                font-extrabold
+                text-white
+              ">
+                Ongoing Projects
+              </h2>
+
+              <div className="
+                h-px
+                bg-white/20
+                flex-grow
+                mt-1
+              " />
+
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {ongoingProjects.map((project, i) => (
-                <ProjectCard key={project.title} project={project} index={i} />
+
+            <div className="
+              grid
+              sm:grid-cols-2
+              lg:grid-cols-3
+              gap-8
+            ">
+              {ongoingProjects.map((project, index) => (
+                <ProjectCard
+                  key={project.title}
+                  project={project}
+                  index={index}
+                />
               ))}
             </div>
+
           </section>
 
+          {/* Completed Projects */}
           <section>
+
             <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-3xl font-bold text-foreground">Completed Projects</h2>
-              <div className="h-px bg-border flex-grow mt-2" />
+
+              <h2 className="
+                text-2xl
+                md:text-3xl
+                font-extrabold
+                text-white
+              ">
+                Completed Projects
+              </h2>
+
+              <div className="
+                h-px
+                bg-white/20
+                flex-grow
+                mt-1
+              " />
+
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {completedProjects.map((project, i) => (
-                <ProjectCard key={project.title} project={project} index={i} />
+
+            <div className="
+              grid
+              sm:grid-cols-2
+              lg:grid-cols-3
+              gap-8
+            ">
+              {completedProjects.map((project, index) => (
+                <ProjectCard
+                  key={project.title}
+                  project={project}
+                  index={index}
+                />
               ))}
             </div>
+
           </section>
+
         </div>
+
       </div>
+
     </div>
   )
 }

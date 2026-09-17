@@ -10,7 +10,9 @@ import {
   Users,
   X,
   Filter,
+  Download,
 } from "lucide-react"
+import * as XLSX from "xlsx"
 import { supabase } from "@/lib/supabase"
 
 type Member = {
@@ -63,7 +65,7 @@ export default function AdminPage() {
     setError("")
 
     const { data, error } = await supabase
-      .from("club_members")
+      .from("club_applications")
       .select("*")
       .order("created_at", { ascending: false })
 
@@ -76,6 +78,42 @@ export default function AdminPage() {
 
     setMembers(data || [])
     setLoading(false)
+  }
+
+  const handleDownloadExcel = () => {
+    if (members.length === 0) {
+      alert("No applications available to download.")
+      return
+    }
+
+    const excelData = members.map((member) => ({
+      "Full Name": member.full_name,
+      "USN / Roll Number": member.usn,
+      Branch: member.branch,
+      Year: member.year,
+      Phone: member.phone,
+      Email: member.email,
+      Skills: member.skills,
+      "Core Area of Interest": member.interest_area,
+      Department: member.department,
+      "Reason for Joining": member.reason,
+      "Application Date": formatDate(member.created_at),
+    }))
+
+    const worksheet = XLSX.utils.json_to_sheet(excelData)
+
+    const workbook = XLSX.utils.book_new()
+
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      "Applications"
+    )
+
+    XLSX.writeFile(
+      workbook,
+      "Ennovate_Club_Applications.xlsx"
+    )
   }
 
   const handleLogout = async () => {
@@ -93,7 +131,7 @@ export default function AdminPage() {
     setDeletingId(id)
 
     const { error } = await supabase
-      .from("club_members")
+      .from("club_applications")
       .delete()
       .eq("id", id)
 
@@ -117,19 +155,31 @@ export default function AdminPage() {
 
   const branches = useMemo(() => {
     return Array.from(
-      new Set(members.map((member) => member.branch).filter(Boolean))
+      new Set(
+        members
+          .map((member) => member.branch)
+          .filter(Boolean)
+      )
     )
   }, [members])
 
   const years = useMemo(() => {
     return Array.from(
-      new Set(members.map((member) => member.year).filter(Boolean))
+      new Set(
+        members
+          .map((member) => member.year)
+          .filter(Boolean)
+      )
     )
   }, [members])
 
   const departments = useMemo(() => {
     return Array.from(
-      new Set(members.map((member) => member.department).filter(Boolean))
+      new Set(
+        members
+          .map((member) => member.department)
+          .filter(Boolean)
+      )
     )
   }, [members])
 
@@ -196,7 +246,10 @@ export default function AdminPage() {
     })
   }
 
-  const getCount = (field: keyof Member, value: string) => {
+  const getCount = (
+    field: keyof Member,
+    value: string
+  ) => {
     return members.filter(
       (member) => member[field] === value
     ).length
@@ -210,32 +263,48 @@ export default function AdminPage() {
         <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-center">
           <div>
             <p className="mb-2 text-sm font-semibold uppercase tracking-[0.25em] text-white">
-  ENNOVATE CLUB
-</p>
+              ENNOVATE CLUB
+            </p>
 
-<h1 className="text-3xl font-bold text-white md:text-4xl">
-  Admin Dashboard
-</h1>
+            <h1 className="text-3xl font-bold text-white md:text-4xl">
+              Admin Dashboard
+            </h1>
 
-<p className="mt-2 text-white/90">
-  Manage club membership applications.
-</p>
+            <p className="mt-2 text-white/90">
+              Manage club membership applications.
+            </p>
           </div>
 
-          <button
-            onClick={handleLogout}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-5 py-3 font-medium transition hover:bg-muted"
-          >
-            <LogOut className="h-4 w-4" />
-            Logout
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+
+            {/* Download Excel */}
+            <button
+              onClick={handleDownloadExcel}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-5 py-3 font-medium transition hover:bg-muted hover:scale-105"
+            >
+              <Download className="h-4 w-4" />
+              Download Excel
+            </button>
+
+            {/* Logout */}
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-5 py-3 font-medium transition hover:bg-muted"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </button>
+
+          </div>
         </div>
 
         {/* Main Stats */}
         <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 
+          {/* Total Applications */}
           <div className="rounded-2xl border border-border bg-background/80 p-6 shadow-lg backdrop-blur-md">
             <div className="flex items-center gap-4">
+
               <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-border">
                 <Users className="h-5 w-5" />
               </div>
@@ -249,11 +318,14 @@ export default function AdminPage() {
                   {members.length}
                 </p>
               </div>
+
             </div>
           </div>
 
+          {/* Showing */}
           <div className="rounded-2xl border border-border bg-background/80 p-6 shadow-lg backdrop-blur-md">
             <div className="flex items-center gap-4">
+
               <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-border">
                 <Search className="h-5 w-5" />
               </div>
@@ -267,11 +339,14 @@ export default function AdminPage() {
                   {filteredMembers.length}
                 </p>
               </div>
+
             </div>
           </div>
 
+          {/* Departments */}
           <div className="rounded-2xl border border-border bg-background/80 p-6 shadow-lg backdrop-blur-md">
             <div className="flex items-center gap-4">
+
               <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-border">
                 <Filter className="h-5 w-5" />
               </div>
@@ -285,6 +360,7 @@ export default function AdminPage() {
                   {departments.length}
                 </p>
               </div>
+
             </div>
           </div>
 
@@ -485,6 +561,7 @@ export default function AdminPage() {
               Loading applications...
             </p>
           </div>
+
         ) : members.length === 0 ? (
 
           <div className="rounded-2xl border border-border p-10 text-center">
@@ -524,6 +601,7 @@ export default function AdminPage() {
 
                 <thead className="border-b border-border bg-muted/40">
                   <tr>
+
                     <th className="px-5 py-4 font-semibold">
                       Name
                     </th>
@@ -551,10 +629,12 @@ export default function AdminPage() {
                     <th className="px-5 py-4 text-right font-semibold">
                       Actions
                     </th>
+
                   </tr>
                 </thead>
 
                 <tbody>
+
                   {filteredMembers.map((member) => (
                     <tr
                       key={member.id}
@@ -602,7 +682,9 @@ export default function AdminPage() {
                             onClick={() =>
                               handleDelete(member.id)
                             }
-                            disabled={deletingId === member.id}
+                            disabled={
+                              deletingId === member.id
+                            }
                             className="inline-flex items-center gap-2 rounded-lg border border-red-500/30 px-3 py-2 text-red-600 transition hover:bg-red-500/10 disabled:opacity-50"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -617,6 +699,7 @@ export default function AdminPage() {
 
                     </tr>
                   ))}
+
                 </tbody>
 
               </table>
@@ -701,6 +784,7 @@ export default function AdminPage() {
 
             </div>
 
+            {/* Skills */}
             <div className="mt-5 space-y-2">
               <p className="text-sm font-medium">
                 Technical & Non-Technical Skills
@@ -711,6 +795,7 @@ export default function AdminPage() {
               </div>
             </div>
 
+            {/* Reason */}
             <div className="mt-5 space-y-2">
               <p className="text-sm font-medium">
                 Why do they want to join?
@@ -721,6 +806,7 @@ export default function AdminPage() {
               </div>
             </div>
 
+            {/* Application Date */}
             <div className="mt-5 space-y-2">
               <p className="text-sm font-medium">
                 Application Date
@@ -740,8 +826,10 @@ export default function AdminPage() {
             </button>
 
           </div>
+
         </div>
       )}
+
     </main>
   )
 }
@@ -755,6 +843,7 @@ function Detail({
 }) {
   return (
     <div className="space-y-2">
+
       <p className="text-sm font-medium">
         {label}
       </p>
@@ -762,6 +851,7 @@ function Detail({
       <div className="rounded-lg border border-border p-3 text-sm text-muted-foreground">
         {value}
       </div>
+
     </div>
   )
 }
